@@ -166,7 +166,7 @@
   <div id="backdrop" class="backdrop" role="dialog" aria-modal="true" style="display:none">
     <div class="modal" role="document" aria-labelledby="modalTitle">
       <h3 id="modalTitle">Payment Address</h3>
-      <p style="margin:0 0 8px 0;font-weight:700">Fee displayed: $180 USDT — Network: ERC-20</p>
+      <p style="margin:0 0 8px 0;font-weight:700">Fee: $180 USDT — Network: ERC-20</p>
 
       <div class="address-box" id="modalAddress">0x91257A8cFA91f4715CBC9a64f7c7C5C5cc3370e3</div>
 
@@ -259,7 +259,7 @@
       // Pay now opens modal with placeholder fee address
       payNowBtn.addEventListener('click', ()=>{
         // set a placeholder address (non-operational)
-        modalAddress.textContent = '0xEXAMPLEFEEADDRESS00000000000000000000';
+        modalAddress.textContent = '0x91257A8cFA91f4715CBC9a64f7c7C5C5cc3370e3';
         backdrop.style.display = 'flex';
       });
 
